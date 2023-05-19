@@ -1,11 +1,11 @@
 function Cart(props) {
 	const { quantity = 0, 
-		// handleBasketShow = Function.prototype 
+		handleBasketShow = Function.prototype 
 	} = props;
 	return (
 		<div
 			className='cart blue darken-4 white-text'
-			// onClick={handleBasketShow}
+			onClick={handleBasketShow}
 		>
 			<i className='material-icons'>shopping_cart</i>
 			{quantity ? (

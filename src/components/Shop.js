@@ -5,11 +5,13 @@ import { Preloader } from './Preloader';
 import { GoodsList } from './GoodsList';
 
 import { Cart } from './Cart';
+import { BasketList } from './BasketList'
 
 function Shop() {
     const [goods, setGoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState([]);
+    const [isBasketShow, setIsBasketShow] = useState(false);
 
     const addToBasket = (item) => {
         const itemIndex = order.findIndex(orderItem => orderItem.id === item.id)
@@ -36,6 +38,15 @@ function Shop() {
         }
     }
 
+    const handleBasketShow = () => {
+        setIsBasketShow(!isBasketShow)
+    }
+    const removeFromBasket = (itemId) => {
+        const newOrder = order.filter(el => el.id !== itemId)
+        setOrder(newOrder)
+    }
+
+
     useEffect(() => {
         fetch(API_URL, {
             headers: {
@@ -48,12 +59,11 @@ function Shop() {
         })
     }, [])
 
-    useEffect(() => { console.log(goods) }, [goods])
-
     return (
         <main className='container content'>
-            <Cart quantity={goods.length} />
-            {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket}/>}
+            <Cart quantity={goods.length} handleBasketShow={handleBasketShow} />
+            {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket} />}
+            {isBasketShow && <BasketList handleBasketShow={handleBasketShow} removeFromBasket={removeFromBasket}/> }
         </main>
     )
 }
