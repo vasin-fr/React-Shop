@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { API_KEY, API_URL } from '../config';
 import { Preloader } from './Preloader';
-
 import { GoodsList } from './GoodsList';
+import { Alert } from './Alert';
 
 import { Cart } from './Cart';
 import { BasketList } from './BasketList'
@@ -12,6 +12,7 @@ function Shop() {
     const [loading, setLoading] = useState(true);
     const [order, setOrder] = useState([]);
     const [isBasketShow, setIsBasketShow] = useState(false);
+    const [alertName, setAlertName] = useState('');
 
     const addToBasket = (item) => {
         const itemIndex = order.findIndex(orderItem => orderItem.id === item.id)
@@ -33,7 +34,7 @@ function Shop() {
                     return orderItem;
                 }
             })
-
+            setAlertName(item.name)
             setOrder([newOrder])
         }
     }
@@ -75,6 +76,9 @@ function Shop() {
         setOrder(newOrder)
     } 
 
+    const closeAlert = () => {
+        setAlertName('');
+    }
 
     useEffect(() => {
         fetch(API_URL, {
@@ -93,6 +97,7 @@ function Shop() {
             <Cart quantity={goods.length} handleBasketShow={handleBasketShow} />
             {loading ? <Preloader /> : <GoodsList goods={goods} addToBasket={addToBasket} />}
             {isBasketShow && <BasketList handleBasketShow={handleBasketShow} removeFromBasket={removeFromBasket} incQuantity={incQuantity} decQuantity={decQuantity}/> }
+            {alertName && <Alert closeAlert={closeAlert} name={alertName}/> }
         </main>
     )
 }
